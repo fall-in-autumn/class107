@@ -50,7 +50,7 @@
             <p class="text-amber-700/80 text-xs md:text-sm">친구들이 직접 뽑은 베스트 프렌드를 소개합니다!</p>
         </div>
 
-        <!-- 우측 상단 로그인 / 마이페이지 버튼 -->
+        <!-- 우측 상단 로그인 및 마이페이지 버튼 -->
         <div class="flex items-center gap-3 z-10">
             <div id="auth-status-container">
                 <button onclick="handleGoogleLogin()" id="login-btn" class="flex items-center gap-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-4 py-2 rounded-2xl shadow-sm text-sm transition font-bold">
@@ -182,21 +182,27 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signInWithCustomToken, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 환경 변수 설정
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-best-friend-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        // 파이어베이스 설정값 적용 (의리T 설정 반영 완료)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkyUb0P7HwFpEh3WFiVDKyFlq_quAagdc",
+            authDomain: "class2026-107.firebaseapp.com",
+            projectId: "class2026-107",
+            storageBucket: "class2026-107.firebasestorage.app",
+            messagingSenderId: "972146261186",
+            appId: "1:972146261186:web:b0a3459f75d69c772bcf5b"
+        };
 
+        const appId = 'class2026-107-best-friend';
         let app, db, auth;
         let currentUser = null;
 
-        if (Object.keys(firebaseConfig).length > 0) {
+        try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
 
-            // 인증 초기화
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                 signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
             } else {
@@ -207,6 +213,8 @@
                 currentUser = user;
                 updateAuthUI(user);
             });
+        } catch (e) {
+            console.error("Firebase 초기화 에러:", e);
         }
 
         window.handleGoogleLogin = async function() {
@@ -245,7 +253,6 @@
             }
         }
 
-        // 전역 노출 함수
         window.openMyPageModal = async function() {
             if (!currentUser || currentUser.isAnonymous) {
                 showAlert("로그인 후 이용 가능합니다!", "🔒");
@@ -256,7 +263,6 @@
             document.getElementById('modal-user-name').innerText = currentUser.displayName || "선생님/학생";
             document.getElementById('modal-user-email').innerText = currentUser.email || "";
 
-            // Firestore에서 사용자 커스텀 아바타 불러오기
             const userAvatarPreview = document.getElementById('modal-user-avatar-preview');
             let userAvatar = "🐰";
             
@@ -283,7 +289,7 @@
 
         window.closeMyPageModal = function() {
             document.getElementById('mypage-modal').classList.add('hidden');
-            location.reload(); // 변경사항 즉시 반영
+            location.reload(); 
         };
 
         window.selectProfileEmoji = async function(emoji) {
@@ -314,10 +320,7 @@
                     avatar: avatarValue,
                     updatedAt: new Date().toISOString()
                 };
-                // 사용자별 프라이빗 저장소에 저장
                 await setDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data'), profileData);
-                
-                // 베스트 프렌드 데이터와 이름 매칭을 위해 public 데이터에도 반영 가능하도록 동기화 키 저장
                 localStorage.setItem(`user_avatar_${currentUser.displayName}`, avatarValue);
                 showAlert("프로필이 성공적으로 저장되었습니다! ✨", "🌸");
             } catch (e) {
@@ -327,10 +330,8 @@
     </script>
 
     <script>
-        // 🛠️ [설정] 배포한 구글 앱스 스크립트(GAS) 웹 앱 URL
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; 
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; // 여기에 배포한 구글 앱스 스크립트 웹 앱 URL을 넣으세요
 
-        // 데모 데이터 (GAS URL이 없을 때 보여줄 기본 데이터)
         const demoData = {
             week: "2026년 1학기 3주차",
             currentWinners: [
@@ -343,14 +344,12 @@
             ]
         };
 
-        // DOM 요소 참조
         const currentWeekLabelEl = document.getElementById('current-week-label');
         const winnersContainer = document.getElementById('current-winners-container');
         const winnersCountBadge = document.getElementById('winners-count-badge');
         const archiveListEl = document.getElementById('archive-list');
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
-        // 초기 실행
         if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
             startPollingData(GAS_WEB_APP_URL);
         } else {
@@ -360,7 +359,7 @@
 
         function startPollingData(url) {
             fetchData(url);
-            setInterval(() => fetchData(url), 10000); // 10초마다 자동 갱신
+            setInterval(() => fetchData(url), 10000); 
         }
 
         async function fetchData(url) {
@@ -388,7 +387,6 @@
                 winnersContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 bg-white rounded-2xl border border-dashed border-amber-200">등록된 이번 주 베스트 프렌드가 없습니다.</div>`;
             } else {
                 winners.forEach((winner) => {
-                    // 마이페이지나 로컬 저장소에서 커스텀 아바타가 연동되었는지 확인 (이름 매칭)
                     const customAvatar = localStorage.getItem(`user_avatar_${winner.name}`) || winner.emoji || '⭐';
                     const isImage = customAvatar.startsWith('data:image');
 
@@ -419,7 +417,6 @@
                 });
             }
 
-            // 명예의 전당 렌더링 (아카이브에도 아바타 연동)
             const archives = data.archive || [];
             archiveListEl.innerHTML = "";
             if (archives.length === 0) {
@@ -446,7 +443,6 @@
             }
         }
 
-        // 공통 알림 함수 (alert 대안)
         window.showAlert = function(msg, icon = "✨") {
             document.getElementById('alert-message').innerText = msg;
             document.getElementById('alert-icon').innerText = icon;
