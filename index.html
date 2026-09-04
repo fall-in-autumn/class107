@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이번 주 베스트 프렌드 🌟</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.mm/3.4.1"></script>
-    <!-- Tailwind CDN with proper config (using Tailwind Play CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +21,7 @@
         }
         @keyframes float {
             0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(3deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
             100% { transform: translateY(0px) rotate(0deg); }
         }
         .floating {
@@ -47,78 +45,44 @@
         <h1 class="text-3xl md:text-4xl text-amber-800 tracking-wide drop-shadow-sm">
             🌿 우리 반 따뜻한 칭찬 주인공 🌿
         </h1>
-        <p class="text-amber-700/80 mt-1 text-sm md:text-base">친구들이 직접 뽑은 이번 주 베스트 프렌드를 소개합니다!</p>
+        <p class="text-amber-700/80 mt-1 text-sm md:text-base">친구들이 직접 뽑은 베스트 프렌드를 소개합니다!</p>
     </header>
 
     <!-- 메인 컨텐츠 영역 -->
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col items-center justify-center max-w-4xl">
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col items-center max-w-5xl">
         
-        <!-- 주차 선택 및 설정 버튼 (선생님 모드 토글 가능) -->
+        <!-- 주차 표시 바 -->
         <div class="w-full flex justify-between items-center mb-6 px-2">
             <div class="flex items-center space-x-2 bg-amber-50 px-4 py-2 rounded-full border border-amber-200 text-amber-900 shadow-sm">
                 <span class="inline-block w-3 h-3 bg-green-400 rounded-full animate-ping"></span>
                 <span id="current-week-label" class="text-base">2026년 1학기 3주차</span>
             </div>
-            <!-- 구글시트 연동 모드 버튼 제거 (화면에서 숨김) -->
+            <div class="text-xs text-gray-500 flex items-center gap-1">
+                <span>🔄 구글 시트 동기화:</span>
+                <span id="last-sync-time">연동 대기 중</span>
+            </div>
         </div>
 
-        <!-- 베스트 프렌드 카드 메인 -->
-        <div id="winner-display-card" class="w-full bg-white rounded-3xl p-6 md:p-10 card-shadow border-4 border-pink-100 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden transition-all duration-500">
+        <!-- 이번 주 베스트 프렌드들 (다중 지원 그리드) -->
+        <div class="w-full mb-12">
+            <h2 class="text-2xl font-bold text-amber-900 mb-6 flex items-center gap-2">
+                <span>👑 이번 주 베스트 프렌드</span>
+                <span id="winners-count-badge" class="text-xs bg-pink-100 text-pink-700 px-2.5 py-1 rounded-full">0명 선정</span>
+            </h2>
             
-            <!-- 왼쪽: 아바타/일러스트 영역 -->
-            <div class="relative flex-shrink-0">
-                <div class="w-40 h-40 md:w-52 md:h-52 bg-gradient-to-tr from-pink-100 to-orange-100 rounded-full flex items-center justify-center border-4 border-white shadow-inner floating">
-                    <span id="winner-avatar" class="text-6xl md:text-8xl">🐰</span>
-                </div>
-                <div class="absolute -bottom-2 right-4 bg-yellow-300 text-yellow-900 text-xs px-3 py-1 rounded-full font-bold shadow">
-                    👑 이번 주 주인공
-                </div>
-            </div>
-
-            <!-- 오른쪽: 정보 및 칭찬 메시지 -->
-            <div class="flex-grow text-center md:text-left">
-                <div class="inline-block bg-pink-50 text-pink-700 text-xs px-3 py-1 rounded-full mb-2 font-semibold">
-                    BEST FRIEND OF THE WEEK
-                </div>
-                <h2 id="winner-name" class="text-4xl md:text-5xl font-bold text-gray-800 mb-3 tracking-wide">
-                    김도덕 친구
-                </h2>
-                <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-100 mb-4">
-                    <p class="text-xs text-amber-800 font-semibold mb-1">💌 친구들이 남긴 따뜻한 한마디</p>
-                    <p id="winner-message" class="handwriting text-2xl md:text-3xl text-gray-700 leading-relaxed">
-                        "항상 밝은 미소로 친구들을 도와주고, 모둠 활동에서 리더십을 발휘해 주어서 고마워!"
-                    </p>
-                </div>
-                <div class="text-xs text-gray-400 flex items-center justify-center md:justify-start gap-1">
-                    <span>🔄 구글 시트 마지막 동기화:</span>
-                    <span id="last-sync-time">방금 전 (실시간 연동 중)</span>
-                </div>
+            <!-- 다중 수상자가 들어갈 컨테이너 -->
+            <div id="current-winners-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <!-- 자바스크립트로 동적 생성됩니다 -->
             </div>
         </div>
 
-        <!-- 이전 베스트 프렌드 보기 (아카이브) -->
-        <div class="w-full mt-10">
-            <h3 class="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
+        <!-- 명예의 전당 (구글 시트 아카이브 연동) -->
+        <div class="w-full mt-4">
+            <h3 class="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2">
                 <span>📚 명예의 전당 (지난 베스트 프렌드)</span>
             </h3>
             <div id="archive-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- 아카이브 카드 아이템들 -->
-                <div class="bg-white/80 p-4 rounded-2xl border border-amber-100 shadow-sm flex items-center space-x-3">
-                    <span class="text-3xl">🦊</span>
-                    <div>
-                        <p class="text-xs text-amber-700 font-bold">2주차</p>
-                        <p class="text-base font-bold text-gray-800">이배려 친구</p>
-                        <p class="text-xs text-gray-500 truncate w-40">"청소를 늘 도맡아 해줬어요!"</p>
-                    </div>
-                </div>
-                <div class="bg-white/80 p-4 rounded-2xl border border-amber-100 shadow-sm flex items-center space-x-3">
-                    <span class="text-3xl">🦁</span>
-                    <div>
-                        <p class="text-xs text-amber-700 font-bold">1주차</p>
-                        <p class="text-base font-bold text-gray-800">박정직 친구</p>
-                        <p class="text-xs text-gray-500 truncate w-40">"학급 규칙을 잘 지켰어요."</p>
-                    </div>
-                </div>
+                <!-- 아카이브 카드 아이템들이 동적으로 로드됩니다 -->
             </div>
         </div>
 
@@ -129,65 +93,118 @@
         <p>우리 반의 따뜻한 마음을 모으는 공간 🌸 의리T의 도덕 교실</p>
     </footer>
 
-    <!-- 인터랙티브 스크립트 -->
+    <!-- 스크립트 영역 -->
     <script>
-        // 🛠️ [선생님 설정용] 배포한 구글 앱스 스크립트(GAS) 웹 앱 URL을 여기에 입력하세요!
-        // 예: const GAS_WEB_APP_URL = "https://script.google.com/macros/s/.../exec";
-        // 빈 문자열("")로 두면 데모 데이터로 작동합니다.
+        // 🛠️ [설정] 배포한 구글 앱스 스크립트(GAS) 웹 앱 URL
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; 
 
-        // 기본 데모 데이터
-        let currentWinner = {
+        // 데모 데이터 (GAS URL이 없을 때 보여줄 기본 데이터)
+        const demoData = {
             week: "2026년 1학기 3주차",
-            name: "김도덕 친구",
-            emoji: "🐰",
-            message: "항상 밝은 미소로 친구들을 도와주고, 모둠 활동에서 리더십을 발휘해 주어서 고마워!"
+            currentWinners: [
+                { name: "김도덕 친구", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
+                { name: "이배려 친구", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
+            ],
+            archive: [
+                { week: "2주차", name: "박정직 친구", emoji: "🦁", message: "학급 청소를 스스로 도맡아 해주었습니다." },
+                { week: "1주차", name: "최성실 친구", emoji: "꾸러기", message: "지각 없이 바른 생활을 보여줬어요." }
+            ]
         };
 
         // DOM 요소 참조
-        const winnerNameEl = document.getElementById('winner-name');
-        const winnerAvatarEl = document.getElementById('winner-avatar');
-        const winnerMessageEl = document.getElementById('winner-message');
         const currentWeekLabelEl = document.getElementById('current-week-label');
+        const winnersContainer = document.getElementById('current-winners-container');
+        const winnersCountBadge = document.getElementById('winners-count-badge');
+        const archiveListEl = document.getElementById('archive-list');
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
-        // 페이지 로드 시 GAS URL이 설정되어 있다면 실시간 연동 시작
+        // 초기 실행
         if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
             startPollingData(GAS_WEB_APP_URL);
         } else {
+            renderUI(demoData);
             lastSyncTimeEl.innerText = "데모 모드 구동 중";
         }
 
-        function updateUI(data) {
-            winnerNameEl.innerText = data.name;
-            winnerAvatarEl.innerText = data.emoji || '⭐';
-            winnerMessageEl.innerText = `"${data.message}"`;
-            currentWeekLabelEl.innerText = data.week || "이번 주";
-            
-            const now = new Date();
-            lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 갱신됨`;
-        }
-
-        // 실시간 폴링 함수 (setInterval을 이용해 주기적으로 GAS 서버에 데이터 요청)
         function startPollingData(url) {
-            // 최초 즉시 실행
-            fetchDataFromGAS(url);
-
-            // 10초마다 자동 갱신 (실시간 효과)
-            setInterval(() => {
-                fetchDataFromGAS(url);
-            }, 10000);
+            fetchData(url);
+            setInterval(() => fetchData(url), 10000); // 10초마다 자동 갱신
         }
 
-        async function fetchDataFromGAS(url) {
+        async function fetchData(url) {
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                if (data && data.name) {
-                    updateUI(data);
+                if (data) {
+                    renderUI(data);
+                    const now = new Date();
+                    lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 갱신됨`;
                 }
             } catch (error) {
-                console.log("GAS 데이터 연동 대기 중 (CORS 설정 또는 URL을 확인해주세요)");
+                console.log("시트 연동 대기 중 혹은 CORS 오류 (데모 데이터 사용 중)");
+            }
+        }
+
+        function renderUI(data) {
+            // 주차 설정
+            currentWeekLabelEl.innerText = data.week || "이번 주";
+
+            // 이번 주 베스트 프렌드 렌더링 (다중 인원 지원)
+            const winners = data.currentWinners || [];
+            winnersCountBadge.innerText = `${winners.length}명 선정`;
+            
+            winnersContainer.innerHTML = "";
+            if (winners.length === 0) {
+                winnersContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 bg-white rounded-2xl border border-dashed border-amber-200">등록된 이번 주 베스트 프렌드가 없습니다.</div>`;
+            } else {
+                winners.forEach((winner, index) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white rounded-3xl p-6 card-shadow border-4 border-pink-100 flex flex-col sm:flex-row items-center gap-6 relative overflow-hidden transition-all duration-300 hover:scale-[1.01]";
+                    card.style.animationDelay = `${index * 0.2}s`;
+                    
+                    card.innerHTML = `
+                        <div class="relative flex-shrink-0">
+                            <div class="w-32 h-32 bg-gradient-to-tr from-pink-100 to-orange-100 rounded-full flex items-center justify-center border-4 border-white shadow-inner floating">
+                                <span class="text-5xl">${winner.emoji || '⭐'}</span>
+                            </div>
+                            <div class="absolute -bottom-1 right-2 bg-yellow-300 text-yellow-900 text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow">
+                                👑 주인공
+                            </div>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <div class="inline-block bg-pink-50 text-pink-700 text-[11px] px-2.5 py-0.5 rounded-full mb-1 font-semibold">
+                                BEST FRIEND
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">${winner.name}</h3>
+                            <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
+                                <p class="text-[11px] text-amber-800 font-semibold mb-0.5">💌 친구들이 남긴 한마디</p>
+                                <p class="handwriting text-xl text-gray-700 leading-snug">"${winner.message}"</p>
+                            </div>
+                        </div>
+                    `;
+                    winnersContainer.appendChild(card);
+                });
+            }
+
+            // 명예의 전당(아카이브) 렌더링
+            const archives = data.archive || [];
+            archiveListEl.innerHTML = "";
+            if (archives.length === 0) {
+                archiveListEl.innerHTML = `<p class="text-gray-400 text-sm">등록된 기록이 없습니다.</p>`;
+            } else {
+                archives.forEach(item => {
+                    const archCard = document.createElement('div');
+                    archCard.className = "bg-white/90 p-4 rounded-2xl border border-amber-100 shadow-sm flex items-center space-x-3 transition hover:shadow-md";
+                    archCard.innerHTML = `
+                        <span class="text-3xl flex-shrink-0">${item.emoji || '🌟'}</span>
+                        <div class="overflow-hidden">
+                            <p class="text-xs text-amber-700 font-bold">${item.week}</p>
+                            <p class="text-base font-bold text-gray-800 truncate">${item.name}</p>
+                            <p class="text-xs text-gray-500 truncate">"${item.message}"</p>
+                        </div>
+                    `;
+                    archiveListEl.appendChild(archCard);
+                });
             }
         }
     </script>
