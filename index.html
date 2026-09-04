@@ -6,15 +6,15 @@
     <title>이번 주 베스트 프렌드 🌟</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Jua', sans-serif;
             background-color: #fffaf0;
             color: #5c4033;
         }
-        .handwriting {
-            font-family: 'Nanum Pen Script', cursive;
+        .message-font {
+            font-family: 'Gowun Dodum', sans-serif;
         }
         .card-shadow {
             box-shadow: 0 10px 25px -5px rgba(255, 182, 193, 0.4), 0 8px 10px -6px rgba(255, 182, 193, 0.3);
@@ -39,13 +39,30 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-pink-200">
 
     <!-- 상단 장식 바 -->
-    <header class="bg-gradient-to-r from-amber-100 via-pink-100 to-orange-100 py-6 px-4 shadow-sm text-center relative overflow-hidden">
+    <header class="bg-gradient-to-r from-amber-100 via-pink-100 to-orange-100 py-4 px-6 shadow-sm relative overflow-hidden flex justify-between items-center">
         <div class="absolute left-4 top-2 text-2xl sparkle-star">✨</div>
-        <div class="absolute right-8 bottom-2 text-2xl sparkle-star" style="animation-delay: 1s;">🌟</div>
-        <h1 class="text-3xl md:text-4xl text-amber-800 tracking-wide drop-shadow-sm">
-            🌿 우리 반 따뜻한 칭찬 주인공 🌿
-        </h1>
-        <p class="text-amber-700/80 mt-1 text-sm md:text-base">친구들이 직접 뽑은 베스트 프렌드를 소개합니다!</p>
+        <div class="absolute right-20 bottom-2 text-2xl sparkle-star" style="animation-delay: 1s;">🌟</div>
+        
+        <div>
+            <h1 class="text-2xl md:text-3xl text-amber-800 tracking-wide drop-shadow-sm">
+                🌿 우리 반 따뜻한 칭찬 주인공 🌿
+            </h1>
+            <p class="text-amber-700/80 text-xs md:text-sm">친구들이 직접 뽑은 베스트 프렌드를 소개합니다!</p>
+        </div>
+
+        <!-- 우측 상단 로그인 / 마이페이지 버튼 -->
+        <div class="flex items-center gap-3 z-10">
+            <div id="auth-status-container">
+                <button onclick="handleGoogleLogin()" id="login-btn" class="flex items-center gap-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-4 py-2 rounded-2xl shadow-sm text-sm transition font-bold">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                    <span>구글 로그인</span>
+                </button>
+            </div>
+            
+            <button onclick="openMyPageModal()" id="mypage-btn" class="hidden flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-2xl shadow-md text-sm transition font-bold">
+                <span>👤 마이페이지</span>
+            </button>
+        </div>
     </header>
 
     <!-- 메인 컨텐츠 영역 -->
@@ -65,10 +82,15 @@
 
         <!-- 이번 주 베스트 프렌드들 (다중 지원 그리드) -->
         <div class="w-full mb-12">
-            <h2 class="text-2xl font-bold text-amber-900 mb-6 flex items-center gap-2">
-                <span>👑 이번 주 베스트 프렌드</span>
-                <span id="winners-count-badge" class="text-xs bg-pink-100 text-pink-700 px-2.5 py-1 rounded-full">0명 선정</span>
-            </h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-amber-900 flex items-center gap-2">
+                    <span>👑 이번 주 베스트 프렌드</span>
+                    <span id="winners-count-badge" class="text-xs bg-pink-100 text-pink-700 px-2.5 py-1 rounded-full">0명 선정</span>
+                </h2>
+                <span class="text-xs text-amber-700/70 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200/60">
+                    💡 구글 로그인 후 우측 상단 [마이페이지]에서 프로필을 꾸며보세요!
+                </span>
+            </div>
             
             <!-- 다중 수상자가 들어갈 컨테이너 -->
             <div id="current-winners-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
@@ -88,12 +110,222 @@
 
     </main>
 
+    <!-- 마이페이지 및 프로필 커스텀 모달 -->
+    <div id="mypage-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-pink-100 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                    <span>👤 학생 마이페이지</span>
+                </h3>
+                <button onclick="handleLogout()" class="text-xs text-gray-500 hover:text-red-500 bg-gray-100 px-3 py-1 rounded-xl">로그아웃</button>
+            </div>
+            
+            <!-- 사용자 정보 표시 -->
+            <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-100 mb-6 flex items-center gap-4">
+                <div id="modal-user-avatar-preview" class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-3xl border-2 border-pink-200 shadow-sm overflow-hidden flex-shrink-0">
+                    🐰
+                </div>
+                <div>
+                    <p id="modal-user-name" class="text-lg font-bold text-gray-800">이름 로딩 중...</p>
+                    <p id="modal-user-email" class="text-xs text-gray-500">email@domain.com</p>
+                    <p class="text-[11px] text-pink-600 mt-1 font-semibold">✨ 구글 계정 연동 완료</p>
+                </div>
+            </div>
+
+            <!-- 프로필 꾸미기 섹션 -->
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-gray-700 mb-2">나만의 프로필 이모지 선택하기</label>
+                <div class="grid grid-cols-6 gap-2 bg-amber-50/50 p-3 rounded-2xl border border-amber-100 mb-4">
+                    <button onclick="selectProfileEmoji('🐰')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🐰</button>
+                    <button onclick="selectProfileEmoji('🦊')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🦊</button>
+                    <button onclick="selectProfileEmoji('🦁')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🦁</button>
+                    <button onclick="selectProfileEmoji('🐼')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🐼</button>
+                    <button onclick="selectProfileEmoji('🦄')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🦄</button>
+                    <button onclick="selectProfileEmoji('⭐')" class="text-3xl p-2 hover:bg-white rounded-xl transition">⭐</button>
+                    <button onclick="selectProfileEmoji('🌸')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🌸</button>
+                    <button onclick="selectProfileEmoji('🍀')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🍀</button>
+                    <button onclick="selectProfileEmoji('🍓')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🍓</button>
+                    <button onclick="selectProfileEmoji('🦖')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🦖</button>
+                    <button onclick="selectProfileEmoji('🚀')" class="text-3xl p-2 hover:bg-white rounded-xl transition">🚀</button>
+                    <button onclick="selectProfileEmoji('⚽')" class="text-3xl p-2 hover:bg-white rounded-xl transition">⚽</button>
+                </div>
+
+                <label class="block text-xs font-bold text-gray-700 mb-2">또는 내 사진 파일 업로드하기</label>
+                <input type="file" id="photo-file-input" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer">
+            </div>
+
+            <!-- 버튼 영역 -->
+            <div class="flex justify-end gap-2">
+                <button onclick="closeMyPageModal()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-sm font-bold transition">
+                    확인 및 닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 커스텀 알림 모달 -->
+    <div id="custom-alert-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border-4 border-pink-100 text-center">
+            <div id="alert-icon" class="text-4xl mb-2">✨</div>
+            <h4 id="alert-title" class="text-lg font-bold text-amber-900 mb-1">알림</h4>
+            <p id="alert-message" class="text-sm text-gray-600 mb-4">메시지 내용</p>
+            <button onclick="closeCustomAlert()" class="w-full py-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-xl font-bold text-sm transition">확인</button>
+        </div>
+    </div>
+
     <!-- 푸터 -->
     <footer class="bg-amber-50/50 py-4 text-center text-xs text-amber-800/60 border-t border-amber-100">
         <p>우리 반의 따뜻한 마음을 모으는 공간 🌸 의리T의 도덕 교실</p>
     </footer>
 
-    <!-- 스크립트 영역 -->
+    <!-- Firebase 및 앱 스크립트 영역 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signInWithCustomToken, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 환경 변수 설정
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-best-friend-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        let app, db, auth;
+        let currentUser = null;
+
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // 인증 초기화
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
+            } else {
+                signInAnonymously(auth).catch(console.error);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                updateAuthUI(user);
+            });
+        }
+
+        window.handleGoogleLogin = async function() {
+            if (!auth) {
+                showAlert("구글 로그인을 이용할 수 없는 환경입니다.", "⚠️");
+                return;
+            }
+            try {
+                const provider = new GoogleAuthProvider();
+                await signInWithPopup(auth, provider);
+                showAlert("성공적으로 로그인되었습니다! 🎉", "🌟");
+            } catch (error) {
+                console.error("로그인 오류:", error);
+                showAlert("로그인 중 문제가 발생했습니다.", "❌");
+            }
+        };
+
+        window.handleLogout = async function() {
+            if (auth) {
+                await signOut(auth);
+                closeMyPageModal();
+                showAlert("로그아웃되었습니다.", "👋");
+            }
+        };
+
+        function updateAuthUI(user) {
+            const loginBtn = document.getElementById('login-btn');
+            const mypageBtn = document.getElementById('mypage-btn');
+
+            if (user && !user.isAnonymous && user.email) {
+                loginBtn.classList.add('hidden');
+                mypageBtn.classList.remove('hidden');
+            } else {
+                loginBtn.classList.remove('hidden');
+                mypageBtn.classList.add('hidden');
+            }
+        }
+
+        // 전역 노출 함수
+        window.openMyPageModal = async function() {
+            if (!currentUser || currentUser.isAnonymous) {
+                showAlert("로그인 후 이용 가능합니다!", "🔒");
+                return;
+            }
+
+            const modal = document.getElementById('mypage-modal');
+            document.getElementById('modal-user-name').innerText = currentUser.displayName || "선생님/학생";
+            document.getElementById('modal-user-email').innerText = currentUser.email || "";
+
+            // Firestore에서 사용자 커스텀 아바타 불러오기
+            const userAvatarPreview = document.getElementById('modal-user-avatar-preview');
+            let userAvatar = "🐰";
+            
+            if (db) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists() && docSnap.data().avatar) {
+                        userAvatar = docSnap.data().avatar;
+                    }
+                } catch (e) {
+                    console.log("프로필 로드 중 에러");
+                }
+            }
+
+            if (userAvatar.startsWith('data:image')) {
+                userAvatarPreview.innerHTML = `<img src="${userAvatar}" class="w-full h-full object-cover">`;
+            } else {
+                userAvatarPreview.innerText = userAvatar;
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        window.closeMyPageModal = function() {
+            document.getElementById('mypage-modal').classList.add('hidden');
+            location.reload(); // 변경사항 즉시 반영
+        };
+
+        window.selectProfileEmoji = async function(emoji) {
+            if (!currentUser) return;
+            document.getElementById('modal-user-avatar-preview').innerText = emoji;
+            await saveUserProfile(emoji);
+        };
+
+        window.handleImageUpload = function(event) {
+            const file = event.target.files[0];
+            if (file && currentUser) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const base64Img = e.target.result;
+                    document.getElementById('modal-user-avatar-preview').innerHTML = `<img src="${base64Img}" class="w-full h-full object-cover">`;
+                    await saveUserProfile(base64Img);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        async function saveUserProfile(avatarValue) {
+            if (!db || !currentUser) return;
+            try {
+                const profileData = {
+                    name: currentUser.displayName || "학생",
+                    email: currentUser.email,
+                    avatar: avatarValue,
+                    updatedAt: new Date().toISOString()
+                };
+                // 사용자별 프라이빗 저장소에 저장
+                await setDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data'), profileData);
+                
+                // 베스트 프렌드 데이터와 이름 매칭을 위해 public 데이터에도 반영 가능하도록 동기화 키 저장
+                localStorage.setItem(`user_avatar_${currentUser.displayName}`, avatarValue);
+                showAlert("프로필이 성공적으로 저장되었습니다! ✨", "🌸");
+            } catch (e) {
+                console.error("저장 실패:", e);
+            }
+        }
+    </script>
+
     <script>
         // 🛠️ [설정] 배포한 구글 앱스 스크립트(GAS) 웹 앱 URL
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; 
@@ -102,12 +334,12 @@
         const demoData = {
             week: "2026년 1학기 3주차",
             currentWinners: [
-                { name: "김도덕 친구", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
-                { name: "이배려 친구", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
+                { name: "김도덕", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
+                { name: "이배려", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
             ],
             archive: [
-                { week: "2주차", name: "박정직 친구", emoji: "🦁", message: "학급 청소를 스스로 도맡아 해주었습니다." },
-                { week: "1주차", name: "최성실 친구", emoji: "꾸러기", message: "지각 없이 바른 생활을 보여줬어요." }
+                { week: "2주차", name: "박정직", emoji: "🦁", message: "학급 청소를 스스로 도맡아 해주었습니다." },
+                { week: "1주차", name: "최성실", emoji: "⭐", message: "지각 없이 바른 생활을 보여줬어요." }
             ]
         };
 
@@ -146,10 +378,8 @@
         }
 
         function renderUI(data) {
-            // 주차 설정
             currentWeekLabelEl.innerText = data.week || "이번 주";
 
-            // 이번 주 베스트 프렌드 렌더링 (다중 인원 지원)
             const winners = data.currentWinners || [];
             winnersCountBadge.innerText = `${winners.length}명 선정`;
             
@@ -157,15 +387,18 @@
             if (winners.length === 0) {
                 winnersContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 bg-white rounded-2xl border border-dashed border-amber-200">등록된 이번 주 베스트 프렌드가 없습니다.</div>`;
             } else {
-                winners.forEach((winner, index) => {
+                winners.forEach((winner) => {
+                    // 마이페이지나 로컬 저장소에서 커스텀 아바타가 연동되었는지 확인 (이름 매칭)
+                    const customAvatar = localStorage.getItem(`user_avatar_${winner.name}`) || winner.emoji || '⭐';
+                    const isImage = customAvatar.startsWith('data:image');
+
                     const card = document.createElement('div');
                     card.className = "bg-white rounded-3xl p-6 card-shadow border-4 border-pink-100 flex flex-col sm:flex-row items-center gap-6 relative overflow-hidden transition-all duration-300 hover:scale-[1.01]";
-                    card.style.animationDelay = `${index * 0.2}s`;
                     
                     card.innerHTML = `
                         <div class="relative flex-shrink-0">
-                            <div class="w-32 h-32 bg-gradient-to-tr from-pink-100 to-orange-100 rounded-full flex items-center justify-center border-4 border-white shadow-inner floating">
-                                <span class="text-5xl">${winner.emoji || '⭐'}</span>
+                            <div class="w-32 h-32 bg-gradient-to-tr from-pink-100 to-orange-100 rounded-full flex items-center justify-center border-4 border-white shadow-inner overflow-hidden floating">
+                                ${isImage ? `<img src="${customAvatar}" class="w-full h-full object-cover">` : `<span class="text-5xl">${customAvatar}</span>`}
                             </div>
                             <div class="absolute -bottom-1 right-2 bg-yellow-300 text-yellow-900 text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow">
                                 👑 주인공
@@ -178,7 +411,7 @@
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">${winner.name}</h3>
                             <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
                                 <p class="text-[11px] text-amber-800 font-semibold mb-0.5">💌 친구들이 남긴 한마디</p>
-                                <p class="handwriting text-xl text-gray-700 leading-snug">"${winner.message}"</p>
+                                <p class="message-font text-lg text-gray-700 leading-relaxed">"${winner.message}"</p>
                             </div>
                         </div>
                     `;
@@ -186,27 +419,43 @@
                 });
             }
 
-            // 명예의 전당(아카이브) 렌더링
+            // 명예의 전당 렌더링 (아카이브에도 아바타 연동)
             const archives = data.archive || [];
             archiveListEl.innerHTML = "";
             if (archives.length === 0) {
                 archiveListEl.innerHTML = `<p class="text-gray-400 text-sm">등록된 기록이 없습니다.</p>`;
             } else {
                 archives.forEach(item => {
+                    const customArchAvatar = localStorage.getItem(`user_avatar_${item.name}`) || item.emoji || '🌟';
+                    const isArchImage = customArchAvatar.startsWith('data:image');
+
                     const archCard = document.createElement('div');
                     archCard.className = "bg-white/90 p-4 rounded-2xl border border-amber-100 shadow-sm flex items-center space-x-3 transition hover:shadow-md";
                     archCard.innerHTML = `
-                        <span class="text-3xl flex-shrink-0">${item.emoji || '🌟'}</span>
+                        <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center overflow-hidden flex-shrink-0 border border-amber-200">
+                            ${isArchImage ? `<img src="${customArchAvatar}" class="w-full h-full object-cover">` : `<span class="text-2xl">${customArchAvatar}</span>`}
+                        </div>
                         <div class="overflow-hidden">
                             <p class="text-xs text-amber-700 font-bold">${item.week}</p>
                             <p class="text-base font-bold text-gray-800 truncate">${item.name}</p>
-                            <p class="text-xs text-gray-500 truncate">"${item.message}"</p>
+                            <p class="message-font text-xs text-gray-500 truncate">"${item.message}"</p>
                         </div>
                     `;
                     archiveListEl.appendChild(archCard);
                 });
             }
         }
+
+        // 공통 알림 함수 (alert 대안)
+        window.showAlert = function(msg, icon = "✨") {
+            document.getElementById('alert-message').innerText = msg;
+            document.getElementById('alert-icon').innerText = icon;
+            document.getElementById('custom-alert-modal').classList.remove('hidden');
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('custom-alert-modal').classList.add('hidden');
+        };
     </script>
 </body>
 </html>
