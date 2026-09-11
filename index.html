@@ -68,7 +68,7 @@
     <!-- 메인 컨텐츠 영역 -->
     <main class="container mx-auto px-4 py-8 flex-grow flex flex-col items-center max-w-5xl">
         
-        <!-- 주차 표시 바 -->
+        <!-- 주차 표시 바 및 동기화 상태 -->
         <div class="w-full flex justify-between items-center mb-6 px-2">
             <div class="flex items-center space-x-2 bg-amber-50 px-4 py-2 rounded-full border border-amber-200 text-amber-900 shadow-sm">
                 <span class="inline-block w-3 h-3 bg-green-400 rounded-full animate-ping"></span>
@@ -80,8 +80,21 @@
             </div>
         </div>
 
-        <!-- 이번 주 베스트 프렌드들 (다중 지원 그리드) -->
-        <div class="w-full mb-12">
+        <!-- 탭 네비게이션 버튼 바 -->
+        <div class="w-full flex justify-center gap-3 mb-8">
+            <button onclick="switchTab('thisweek')" id="tab-btn-thisweek" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200">
+                👑 이번주 베스트 프렌드
+            </button>
+            <button onclick="switchTab('compliments')" id="tab-btn-compliments" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
+                💖 칭찬모음 & 게이지
+            </button>
+            <button onclick="switchTab('halloffame')" id="tab-btn-halloffame" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
+                📚 명예의전당
+            </button>
+        </div>
+
+        <!-- [탭 1] 이번주 베스트 프렌드 섹션 -->
+        <div id="tab-content-thisweek" class="w-full mb-12">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-amber-900 flex items-center gap-2">
                     <span>👑 이번 주 베스트 프렌드</span>
@@ -98,24 +111,29 @@
             </div>
         </div>
 
-        <!-- 칭찬 받은 모든 학생들의 칭찬 게이지 & 모음 섹션 -->
-        <div class="w-full mb-12 bg-white/70 backdrop-blur-sm p-6 rounded-3xl border-2 border-amber-100 shadow-sm">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
-                    <span>💖 우리 반 칭찬 게이지 & 받은 칭찬 모음</span>
-                </h3>
-                <span class="text-xs text-gray-500">칭찬을 받을수록 게이지가 쑥쑥 올라가요! ✨</span>
-            </div>
-            <div id="compliment-gauge-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- 동적으로 채워집니다 -->
+        <!-- [탭 2] 칭찬모음 & 칭찬 게이지 섹션 -->
+        <div id="tab-content-compliments" class="w-full mb-12 hidden">
+            <div class="bg-white/70 backdrop-blur-sm p-6 rounded-3xl border-2 border-amber-100 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                        <span>💖 우리 반 칭찬 게이지 & 받은 칭찬 모음</span>
+                    </h3>
+                    <span class="text-xs text-gray-500">칭찬을 받을수록 게이지가 쑥쑥 올라가요! ✨</span>
+                </div>
+                <div id="compliment-gauge-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <!-- 동적으로 채워집니다 -->
+                </div>
             </div>
         </div>
 
-        <!-- 명예의 전당 (구글 시트 아카이브 연동) -->
-        <div class="w-full mt-2">
-            <h3 class="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2">
-                <span>📚 명예의 전당 (지난 베스트 프렌드 & 칭찬 기록)</span>
-            </h3>
+        <!-- [탭 3] 명예의전당 섹션 -->
+        <div id="tab-content-halloffame" class="w-full mb-12 hidden">
+            <div class="mb-4">
+                <h3 class="text-2xl font-bold text-amber-900 flex items-center gap-2">
+                    <span>📚 명예의 전당 (지난 베스트 프렌드 & 기록)</span>
+                </h3>
+                <p class="text-xs text-gray-500 mt-1">역대 주차별로 베스트 프렌드에 선정된 자랑스러운 친구들입니다!</p>
+            </div>
             <div id="archive-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <!-- 아카이브 카드 아이템들이 동적으로 로드됩니다 -->
             </div>
@@ -187,11 +205,10 @@
             </div>
             <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 mb-6">
                 <p class="text-sm font-bold text-amber-900">선생님, 환영합니다! ✨</p>
-                <p class="text-xs text-amber-700/80 mt-1">현재 로그인된 계정이 Firestore 'admins' 컬렉션에 등록되어 관리자 권한으로 인증되었습니다.</p>
+                <p class="text-xs text-amber-700/80 mt-1">현재 로그인된 계정이 관리자 권한으로 인증되었습니다.</p>
             </div>
             <div class="space-y-3 text-xs text-gray-600 mb-6">
-                <p>📋 <strong>데이터 관리 안내:</strong> 베스트 프렌드 및 명예의 전당 데이터는 연결된 구글 시트를 통해 실시간으로 반영됩니다.</p>
-                <p>🔗 <strong>구글 시트 연동 주소(GAS URL) 상태:</strong> <span id="admin-gas-status" class="font-semibold text-green-600">설정 완료됨</span></p>
+                <p>📋 <strong>데이터 관리 안내:</strong> '이번주', '칭찬모음', '명예의전당' 탭의 모든 데이터는 구글 시트의 탭별 시트를 통해 실시간 연동됩니다.</p>
             </div>
             <div class="flex justify-end gap-2">
                 <button onclick="closeAdminModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-bold transition">
@@ -213,7 +230,7 @@
 
     <!-- 푸터 -->
     <footer class="bg-amber-50/50 py-4 text-center text-xs text-amber-800/60 border-t border-amber-100">
-        <p>우리 반의 따뜻한 마음을 모으는 공간 🌸</p>
+        <p>우리 반의 따뜻한 마음을 모으는 공간 🌸 의리T의 도덕 교실</p>
     </footer>
 
     <!-- Firebase 및 인증 관리 스크립트 -->
@@ -243,11 +260,9 @@
 
             onAuthStateChanged(auth, async (user) => {
                 if (user && user.email) {
-                    // 1. 관리자 권한 확인
                     userIsAdmin = await checkAdminRole(user.uid, user.email);
                     
                     if (!userIsAdmin) {
-                        // 2. 관리자가 아니라면 'allowed_students' 명단에 있는지 검증
                         const isAllowed = await checkStudentAllowed(user.email);
                         if (!isAllowed) {
                             showAlert("우리 반 학생 명단에 등록되지 않은 이메일입니다. 선생님께 문의하세요!", "🔒");
@@ -276,7 +291,6 @@
                 if (adminSnap.exists() && (adminSnap.data().role === 'admin' || adminSnap.data().isAdmin === true)) {
                     return true;
                 }
-
                 const emailDocRef = doc(db, 'admins', email.replace(/\./g, '_'));
                 const emailSnap = await getDoc(emailDocRef);
                 if (emailSnap.exists() && (emailSnap.data().role === 'admin' || emailSnap.data().isAdmin === true)) {
@@ -433,16 +447,20 @@
     </script>
 
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; // 여기에 구글 앱스 스크립트 웹 앱 URL을 입력하세요
+        // 구글 앱스 스크립트 웹 앱 URL 및 스프레드시트 연동
+        // 제공된 구글 시트 ID: 1wuejDGAPCSH5X1awMxLenBKS07W4vHCMsBxx3mxTMqU
+        const SHEET_ID = "1wuejDGAPCSH5X1awMxLenBKS07W4vHCMsBxx3mxTMqU";
+        
+        // 구글 앱스 스크립트(GAS)를 배포한 뒤 해당 웹 앱 URL을 아래에 입력하세요.
+        // 입력하지 않을 경우, 시트 연동 구조에 맞춘 데모 데이터와 시트 안내가 표시됩니다.
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; 
 
-        // 확장된 데모 데이터 (모든 칭찬받은 학생들의 누적 횟수 및 메시지 포함)
         const demoData = {
-            week: "2026년 1학기 3주차",
+            week: "2026년 1학기 3주차 (구글시트 연동 대기)",
             currentWinners: [
-                { name: "김도덕", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
-                { name: "이배려", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
+                { name: "김도덕", emoji: "🐰", message: "구글 시트(1wuejDGAP...)에서 이번 주 베스트 프렌드 데이터를 불러오는 중입니다!" },
+                { name: "이배려", emoji: "🦊", message: "앱스 스크립트를 통해 시트의 데이터를 실시간으로 연동할 수 있습니다." }
             ],
-            // 구글 시트에서 allCompliments 배열을 통해 이름, 횟수(count), 최근 메시지(lastMessage) 혹은 칭찬 목록을 동적으로 가져옵니다.
             allCompliments: [
                 { name: "김도덕", emoji: "🐰", count: 3, lastMessage: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
                 { name: "이배려", emoji: "🦊", count: 2, lastMessage: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." },
@@ -463,6 +481,22 @@
         const archiveListEl = document.getElementById('archive-list');
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
+        // 탭 전환 함수
+        window.switchTab = function(tabName) {
+            const tabs = ['thisweek', 'compliments', 'halloffame'];
+            tabs.forEach(t => {
+                const contentEl = document.getElementById(`tab-content-${t}`);
+                const btnEl = document.getElementById(`tab-btn-${t}`);
+                if (t === tabName) {
+                    contentEl.classList.remove('hidden');
+                    btnEl.className = "px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200";
+                } else {
+                    contentEl.classList.add('hidden');
+                    btnEl.className = "px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50";
+                }
+            });
+        };
+
         if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
             startPollingData(GAS_WEB_APP_URL);
         } else {
@@ -480,12 +514,10 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data) {
-                    // 구글 시트에서 받아온 데이터 구조가 올바르게 매핑되도록 처리
-                    // 시트에서 각 학생의 칭찬 누적 목록을 'allCompliments' 혹은 'complimentList'로 제공할 수 있도록 지원
                     const normalizedData = {
                         week: data.week || "이번 주",
                         currentWinners: data.currentWinners || [],
-                        allCompliments: data.allCompliments || data.complimentList || [],
+                        allCompliments: data.allCompliments || [],
                         archive: data.archive || []
                     };
                     renderUI(normalizedData);
@@ -538,7 +570,6 @@
                 });
             }
 
-            // 칭찬 받은 학생들의 명단, 누적 횟수 및 게이지 렌더링 (구글 시트 연동 필드 반영)
             const allCompliments = data.allCompliments || [];
             complimentGaugeContainer.innerHTML = "";
             if (allCompliments.length === 0) {
@@ -548,7 +579,6 @@
                     const customAvatar = localStorage.getItem(`user_avatar_${item.name}`) || item.emoji || '💖';
                     const isImage = customAvatar.startsWith('data:image');
                     const count = Number(item.count) || 0;
-                    // 최대 만렙 기준 설정 (예: 5회 기준 100%, 동적으로 늘어날 수 있도록 처리)
                     const maxCount = Math.max(5, ...allCompliments.map(i => Number(i.count) || 5));
                     const percentage = Math.min(100, (count / maxCount) * 100);
 
@@ -559,20 +589,12 @@
                             <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-pink-200">
                                 ${isImage ? `<img src="${customAvatar}" class="w-full h-full object-cover">` : `<span class="text-2xl">${customAvatar}</span>`}
                             </div>
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center">
-                                    <h4 class="font-bold text-gray-800 text-base">${item.name}</h4>
-                                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">칭찬 ${count}회 ✨</span>
-                                </div>
-                                <p class="message-font text-xs text-gray-500 truncate mt-0.5">"${item.lastMessage || item.message || '따뜻한 칭찬을 받았어요'}"</p>
+                            <div class="flex-grow overflow-hidden">
+                                <h4 class="font-bold text-gray-800 text-base truncate">${item.name}</h4>
+                                <p class="message-font text-xs text-gray-500 truncate mt-0.5">"${item.lastMessage || '따뜻한 칭찬을 받았어요'}"</p>
                             </div>
                         </div>
-                        <!-- 게이지 바 -->
                         <div>
-                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                                <span>칭찬 게이지</span>
-                                <span>${count}회 누적</span>
-                            </div>
                             <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden p-0.5 border border-amber-100">
                                 <div class="bg-gradient-to-r from-pink-400 to-amber-400 h-full rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
                             </div>
