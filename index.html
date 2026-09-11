@@ -47,10 +47,10 @@
             <h1 class="text-2xl md:text-3xl text-amber-800 tracking-wide drop-shadow-sm">
                 🌿 우리 반 따뜻한 칭찬 주인공 🌿
             </h1>
-            <p class="text-amber-700/80 text-xs md:text-sm">친구들이 직접 뽑은 베스트 프렌드를 소개합니다!</p>
+            <p class="text-amber-700/80 text-xs md:text-sm">친구들이 직접 뽑은 베스트 프렌드와 따뜻한 칭찬들을 모았어요!</p>
         </div>
 
-        <!-- 우측 상단 로그인 및 마이페이지 버튼 -->
+        <!-- 우측 상단 로그인 및 마이페이지/관리자 패널 버튼 -->
         <div class="flex items-center gap-3 z-10">
             <div id="auth-status-container">
                 <button onclick="handleGoogleLogin()" id="login-btn" class="flex items-center gap-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-4 py-2 rounded-2xl shadow-sm text-sm transition font-bold">
@@ -60,7 +60,7 @@
             </div>
             
             <button onclick="openMyPageModal()" id="mypage-btn" class="hidden flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-2xl shadow-md text-sm transition font-bold">
-                <span>👤 마이페이지</span>
+                <span id="mypage-btn-text">👤 마이페이지</span>
             </button>
         </div>
     </header>
@@ -98,10 +98,23 @@
             </div>
         </div>
 
+        <!-- 칭찬 받은 모든 학생들의 칭찬 게이지 & 모음 섹션 -->
+        <div class="w-full mb-12 bg-white/70 backdrop-blur-sm p-6 rounded-3xl border-2 border-amber-100 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                    <span>💖 우리 반 칭찬 게이지 & 받은 칭찬 모음</span>
+                </h3>
+                <span class="text-xs text-gray-500">칭찬을 받을수록 게이지가 쑥쑥 올라가요! ✨</span>
+            </div>
+            <div id="compliment-gauge-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- 동적으로 채워집니다 -->
+            </div>
+        </div>
+
         <!-- 명예의 전당 (구글 시트 아카이브 연동) -->
-        <div class="w-full mt-4">
+        <div class="w-full mt-2">
             <h3 class="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2">
-                <span>📚 명예의 전당 (지난 베스트 프렌드)</span>
+                <span>📚 명예의 전당 (지난 베스트 프렌드 & 칭찬 기록)</span>
             </h3>
             <div id="archive-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <!-- 아카이브 카드 아이템들이 동적으로 로드됩니다 -->
@@ -110,7 +123,7 @@
 
     </main>
 
-    <!-- 마이페이지 및 프로필 커스텀 모달 -->
+    <!-- 학생 마이페이지 모달 -->
     <div id="mypage-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-pink-100 animate-in fade-in zoom-in duration-200">
             <div class="flex justify-between items-center mb-4">
@@ -128,7 +141,7 @@
                 <div>
                     <p id="modal-user-name" class="text-lg font-bold text-gray-800">이름 로딩 중...</p>
                     <p id="modal-user-email" class="text-xs text-gray-500">email@domain.com</p>
-                    <p class="text-[11px] text-pink-600 mt-1 font-semibold">✨ 구글 계정 연동 완료</p>
+                    <p class="text-[11px] text-pink-600 mt-1 font-semibold">✨ 승인된 우리 반 학생 인증됨</p>
                 </div>
             </div>
 
@@ -163,6 +176,31 @@
         </div>
     </div>
 
+    <!-- 관리자 패널 모달 -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border-4 border-amber-200 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                    <span>🛠️ 선생님 관리자 패널</span>
+                </h3>
+                <button onclick="handleLogout()" class="text-xs text-gray-500 hover:text-red-500 bg-gray-100 px-3 py-1 rounded-xl">로그아웃</button>
+            </div>
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 mb-6">
+                <p class="text-sm font-bold text-amber-900">선생님, 환영합니다! ✨</p>
+                <p class="text-xs text-amber-700/80 mt-1">현재 로그인된 계정이 Firestore 'admins' 컬렉션에 등록되어 관리자 권한으로 인증되었습니다.</p>
+            </div>
+            <div class="space-y-3 text-xs text-gray-600 mb-6">
+                <p>📋 <strong>데이터 관리 안내:</strong> 베스트 프렌드 및 명예의 전당 데이터는 연결된 구글 시트를 통해 실시간으로 반영됩니다.</p>
+                <p>🔗 <strong>구글 시트 연동 주소(GAS URL) 상태:</strong> <span id="admin-gas-status" class="font-semibold text-green-600">설정 완료됨</span></p>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeAdminModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-bold transition">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 커스텀 알림 모달 -->
     <div id="custom-alert-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border-4 border-pink-100 text-center">
@@ -175,16 +213,15 @@
 
     <!-- 푸터 -->
     <footer class="bg-amber-50/50 py-4 text-center text-xs text-amber-800/60 border-t border-amber-100">
-        <p>우리 반의 따뜻한 마음을 모으는 공간 🌸 의리T의 도덕 교실</p>
+        <p>우리 반의 따뜻한 마음을 모으는 공간 🌸</p>
     </footer>
 
-    <!-- Firebase 및 앱 스크립트 영역 -->
+    <!-- Firebase 및 인증 관리 스크립트 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signInWithCustomToken, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 파이어베이스 설정값 적용 (의리T 설정 반영 완료)
         const firebaseConfig = {
             apiKey: "AIzaSyAkyUb0P7HwFpEh3WFiVDKyFlq_quAagdc",
             authDomain: "class2026-107.firebaseapp.com",
@@ -197,24 +234,72 @@
         const appId = 'class2026-107-best-friend';
         let app, db, auth;
         let currentUser = null;
+        let userIsAdmin = false;
 
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
 
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
-            } else {
-                signInAnonymously(auth).catch(console.error);
-            }
+            onAuthStateChanged(auth, async (user) => {
+                if (user && user.email) {
+                    // 1. 관리자 권한 확인
+                    userIsAdmin = await checkAdminRole(user.uid, user.email);
+                    
+                    if (!userIsAdmin) {
+                        // 2. 관리자가 아니라면 'allowed_students' 명단에 있는지 검증
+                        const isAllowed = await checkStudentAllowed(user.email);
+                        if (!isAllowed) {
+                            showAlert("우리 반 학생 명단에 등록되지 않은 이메일입니다. 선생님께 문의하세요!", "🔒");
+                            await signOut(auth);
+                            return;
+                        }
+                    }
 
-            onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                updateAuthUI(user);
+                    currentUser = user;
+                    updateAuthUI(user, userIsAdmin);
+                } else {
+                    currentUser = null;
+                    userIsAdmin = false;
+                    updateAuthUI(null, false);
+                }
             });
         } catch (e) {
             console.error("Firebase 초기화 에러:", e);
+        }
+
+        async function checkAdminRole(uid, email) {
+            if (!db) return false;
+            try {
+                const adminDocRef = doc(db, 'admins', uid);
+                const adminSnap = await getDoc(adminDocRef);
+                if (adminSnap.exists() && (adminSnap.data().role === 'admin' || adminSnap.data().isAdmin === true)) {
+                    return true;
+                }
+
+                const emailDocRef = doc(db, 'admins', email.replace(/\./g, '_'));
+                const emailSnap = await getDoc(emailDocRef);
+                if (emailSnap.exists() && (emailSnap.data().role === 'admin' || emailSnap.data().isAdmin === true)) {
+                    return true;
+                }
+            } catch (e) {
+                console.log("관리자 확인 중 오류:", e);
+            }
+            return false;
+        }
+
+        async function checkStudentAllowed(email) {
+            if (!db) return false;
+            try {
+                const studentDocRef = doc(db, 'allowed_students', email);
+                const studentSnap = await getDoc(studentDocRef);
+                if (studentSnap.exists()) {
+                    return true;
+                }
+            } catch (e) {
+                console.log("학생 명단 확인 중 오류:", e);
+            }
+            return false;
         }
 
         window.handleGoogleLogin = async function() {
@@ -236,17 +321,26 @@
             if (auth) {
                 await signOut(auth);
                 closeMyPageModal();
+                closeAdminModal();
                 showAlert("로그아웃되었습니다.", "👋");
             }
         };
 
-        function updateAuthUI(user) {
+        function updateAuthUI(user, isAdmin) {
             const loginBtn = document.getElementById('login-btn');
             const mypageBtn = document.getElementById('mypage-btn');
+            const mypageBtnText = document.getElementById('mypage-btn-text');
 
-            if (user && !user.isAnonymous && user.email) {
+            if (user && user.email) {
                 loginBtn.classList.add('hidden');
                 mypageBtn.classList.remove('hidden');
+                if (isAdmin) {
+                    mypageBtnText.innerText = "🛠️ 관리자 패널";
+                    mypageBtn.className = "flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-2xl shadow-md text-sm transition font-bold";
+                } else {
+                    mypageBtnText.innerText = "👤 마이페이지";
+                    mypageBtn.className = "flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-2xl shadow-md text-sm transition font-bold";
+                }
             } else {
                 loginBtn.classList.remove('hidden');
                 mypageBtn.classList.add('hidden');
@@ -254,13 +348,18 @@
         }
 
         window.openMyPageModal = async function() {
-            if (!currentUser || currentUser.isAnonymous) {
+            if (!currentUser) {
                 showAlert("로그인 후 이용 가능합니다!", "🔒");
                 return;
             }
 
+            if (userIsAdmin) {
+                document.getElementById('admin-modal').classList.remove('hidden');
+                return;
+            }
+
             const modal = document.getElementById('mypage-modal');
-            document.getElementById('modal-user-name').innerText = currentUser.displayName || "선생님/학생";
+            document.getElementById('modal-user-name').innerText = currentUser.displayName || "학생";
             document.getElementById('modal-user-email').innerText = currentUser.email || "";
 
             const userAvatarPreview = document.getElementById('modal-user-avatar-preview');
@@ -290,6 +389,10 @@
         window.closeMyPageModal = function() {
             document.getElementById('mypage-modal').classList.add('hidden');
             location.reload(); 
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-modal').classList.add('hidden');
         };
 
         window.selectProfileEmoji = async function(emoji) {
@@ -330,13 +433,22 @@
     </script>
 
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; // 여기에 배포한 구글 앱스 스크립트 웹 앱 URL을 넣으세요
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbYnLJy4H-tq4U5qyhdGKW1-r7JFruLFvezFKXKPbfmRURfiV6Ag9vJX1bWOHx5k8yJg/exec"; // 여기에 구글 앱스 스크립트 웹 앱 URL을 입력하세요
 
+        // 확장된 데모 데이터 (모든 칭찬받은 학생들의 누적 횟수 및 메시지 포함)
         const demoData = {
             week: "2026년 1학기 3주차",
             currentWinners: [
                 { name: "김도덕", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
                 { name: "이배려", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
+            ],
+            // 구글 시트에서 allCompliments 배열을 통해 이름, 횟수(count), 최근 메시지(lastMessage) 혹은 칭찬 목록을 동적으로 가져옵니다.
+            allCompliments: [
+                { name: "김도덕", emoji: "🐰", count: 3, lastMessage: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
+                { name: "이배려", emoji: "🦊", count: 2, lastMessage: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." },
+                { name: "박정직", emoji: "🦁", count: 2, lastMessage: "학급 청소를 스스로 도맡아 해주었습니다." },
+                { name: "최성실", emoji: "⭐", count: 1, lastMessage: "지각 없이 바른 생활을 보여줬어요." },
+                { name: "강친절", emoji: "🌸", count: 1, lastMessage: "속상해하는 친구를 다정하게 위로해 주었어요." }
             ],
             archive: [
                 { week: "2주차", name: "박정직", emoji: "🦁", message: "학급 청소를 스스로 도맡아 해주었습니다." },
@@ -347,6 +459,7 @@
         const currentWeekLabelEl = document.getElementById('current-week-label');
         const winnersContainer = document.getElementById('current-winners-container');
         const winnersCountBadge = document.getElementById('winners-count-badge');
+        const complimentGaugeContainer = document.getElementById('compliment-gauge-container');
         const archiveListEl = document.getElementById('archive-list');
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
@@ -354,7 +467,7 @@
             startPollingData(GAS_WEB_APP_URL);
         } else {
             renderUI(demoData);
-            lastSyncTimeEl.innerText = "데모 모드 구동 중";
+            lastSyncTimeEl.innerText = "데모 모드 구동 중 (구글 시트 연동 대기)";
         }
 
         function startPollingData(url) {
@@ -367,12 +480,20 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data) {
-                    renderUI(data);
+                    // 구글 시트에서 받아온 데이터 구조가 올바르게 매핑되도록 처리
+                    // 시트에서 각 학생의 칭찬 누적 목록을 'allCompliments' 혹은 'complimentList'로 제공할 수 있도록 지원
+                    const normalizedData = {
+                        week: data.week || "이번 주",
+                        currentWinners: data.currentWinners || [],
+                        allCompliments: data.allCompliments || data.complimentList || [],
+                        archive: data.archive || []
+                    };
+                    renderUI(normalizedData);
                     const now = new Date();
                     lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 갱신됨`;
                 }
             } catch (error) {
-                console.log("시트 연동 대기 중 혹은 CORS 오류 (데모 데이터 사용 중)");
+                console.log("시트 연동 데이터 로드 중 오류 (데모 데이터 폴백 유지)");
             }
         }
 
@@ -414,6 +535,50 @@
                         </div>
                     `;
                     winnersContainer.appendChild(card);
+                });
+            }
+
+            // 칭찬 받은 학생들의 명단, 누적 횟수 및 게이지 렌더링 (구글 시트 연동 필드 반영)
+            const allCompliments = data.allCompliments || [];
+            complimentGaugeContainer.innerHTML = "";
+            if (allCompliments.length === 0) {
+                complimentGaugeContainer.innerHTML = `<p class="text-gray-400 text-sm col-span-3 text-center py-4">아직 등록된 칭찬 내역이 없습니다.</p>`;
+            } else {
+                allCompliments.forEach(item => {
+                    const customAvatar = localStorage.getItem(`user_avatar_${item.name}`) || item.emoji || '💖';
+                    const isImage = customAvatar.startsWith('data:image');
+                    const count = Number(item.count) || 0;
+                    // 최대 만렙 기준 설정 (예: 5회 기준 100%, 동적으로 늘어날 수 있도록 처리)
+                    const maxCount = Math.max(5, ...allCompliments.map(i => Number(i.count) || 5));
+                    const percentage = Math.min(100, (count / maxCount) * 100);
+
+                    const gaugeCard = document.createElement('div');
+                    gaugeCard.className = "bg-white p-4 rounded-2xl border border-amber-200/60 shadow-sm flex flex-col justify-between";
+                    gaugeCard.innerHTML = `
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-pink-200">
+                                ${isImage ? `<img src="${customAvatar}" class="w-full h-full object-cover">` : `<span class="text-2xl">${customAvatar}</span>`}
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-bold text-gray-800 text-base">${item.name}</h4>
+                                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">칭찬 ${count}회 ✨</span>
+                                </div>
+                                <p class="message-font text-xs text-gray-500 truncate mt-0.5">"${item.lastMessage || item.message || '따뜻한 칭찬을 받았어요'}"</p>
+                            </div>
+                        </div>
+                        <!-- 게이지 바 -->
+                        <div>
+                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                                <span>칭찬 게이지</span>
+                                <span>${count}회 누적</span>
+                            </div>
+                            <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden p-0.5 border border-amber-100">
+                                <div class="bg-gradient-to-r from-pink-400 to-amber-400 h-full rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    complimentGaugeContainer.appendChild(gaugeCard);
                 });
             }
 
