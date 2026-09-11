@@ -27,13 +27,6 @@
         .floating {
             animation: float 4s ease-in-out infinite;
         }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        .sparkle-star {
-            animation: sparkle 2s ease-in-out infinite;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-pink-200">
@@ -41,11 +34,14 @@
     <!-- 상단 장식 바 -->
     <header class="bg-gradient-to-r from-amber-100 via-pink-100 to-orange-100 py-4 px-6 shadow-sm relative overflow-hidden flex justify-between items-center">
         
-        <div>
-            <h1 class="text-2xl md:text-3xl text-amber-800 tracking-wide drop-shadow-sm">
-                🌿 지사중학교 1-7 학급 홈페이지 🌿
-            </h1>
-            <p class="text-amber-700/80 text-xs md:text-sm">서로 배려하고 존중하며 차별 없는 7반</p>
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🌿</span>
+            <div>
+                <h1 class="text-2xl md:text-3xl text-amber-800 tracking-wide drop-shadow-sm">
+                    지사중학교 1-7 학급 홈페이지 🌟
+                </h1>
+                <p class="text-amber-700/80 text-xs md:text-sm">서로 배려하고 존중하며 차별 없는 7반</p>
+            </div>
         </div>
 
         <!-- 우측 상단 로그인 및 마이페이지/관리자 패널 버튼 -->
@@ -70,7 +66,7 @@
         <div class="w-full flex justify-between items-center mb-6 px-2">
             <div class="flex items-center space-x-2 bg-amber-50 px-4 py-2 rounded-full border border-amber-200 text-amber-900 shadow-sm">
                 <span class="inline-block w-3 h-3 bg-green-400 rounded-full animate-ping"></span>
-                <span id="current-week-label" class="text-base">2026년 1학기 3주차</span>
+                <span id="current-week-label" class="text-base">연동중</span>
             </div>
             <div class="text-xs text-gray-500 flex items-center gap-1">
                 <span>🔄 구글 시트 동기화:</span>
@@ -79,52 +75,56 @@
         </div>
 
         <!-- 탭 네비게이션 버튼 바 -->
-        <div class="w-full flex justify-center gap-3 mb-8">
-            <button onclick="switchTab('thisweek')" id="tab-btn-thisweek" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200">
-                👑 이번주 베스트 프렌드
+        <div class="w-full flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
+            <button onclick="switchTab('bestfriend')" id="tab-btn-bestfriend" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200">
+                👑 베스트 프렌드
             </button>
-            <button onclick="switchTab('compliments')" id="tab-btn-compliments" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
-                💖 칭찬모음 & 게이지
+            <button onclick="switchTab('compliments')" id="tab-btn-compliments" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
+                💖 칭찬모음
             </button>
-            <button onclick="switchTab('halloffame')" id="tab-btn-halloffame" class="px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
-                📚 명예의전당
+            <button onclick="switchTab('halloffame')" id="tab-btn-halloffame" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
+                📚 명예의 전당
+            </button>
+            <button onclick="switchTab('customcursor')" id="tab-btn-customcursor" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50">
+                💻 나만의 커서 만들기
             </button>
         </div>
 
-        <!-- [탭 1] 이번주 베스트 프렌드 섹션 -->
-        <div id="tab-content-thisweek" class="w-full mb-12">
+        <!-- [탭 1] 베스트 프렌드 섹션 -->
+        <div id="tab-content-bestfriend" class="w-full mb-12">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-amber-900 flex items-center gap-2">
                     <span>👑 이번 주 베스트 프렌드</span>
-                    <span id="winners-count-badge" class="text-xs bg-pink-100 text-pink-700 px-2.5 py-1 rounded-full">0명 선정</span>
+                    <span id="winners-count-badge" class="text-xs bg-pink-100 text-pink-700 px-2.5 py-1 rounded-full">연동중</span>
                 </h2>
                 <span class="text-xs text-amber-700/70 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200/60">
                     💡 구글 로그인 후 우측 상단 [마이페이지]에서 프로필을 꾸며보세요!
                 </span>
             </div>
             
-            <!-- 다중 수상자가 들어갈 컨테이너 -->
-            <div id="current-winners-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                <!-- 자바스크립트로 동적 생성됩니다 -->
+            <div id="current-winners-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-2 text-center py-12 text-gray-400 bg-white rounded-3xl border border-dashed border-amber-200">
+                    구글 시트 연동중... (베스트 프렌드 탭 데이터를 확인해주세요)
+                </div>
             </div>
         </div>
 
-        <!-- [탭 2] 칭찬모음 & 칭찬 게이지 섹션 -->
+        <!-- [탭 2] 칭찬모음 섹션 -->
         <div id="tab-content-compliments" class="w-full mb-12 hidden">
             <div class="bg-white/70 backdrop-blur-sm p-6 rounded-3xl border-2 border-amber-100 shadow-sm">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
                         <span>💖 우리 반 칭찬 게이지 & 받은 칭찬 모음</span>
                     </h3>
-                    <span class="text-xs text-gray-500">칭찬을 받을수록 게이지가 쑥쑥 올라가요! ✨</span>
+                    <span class="text-xs text-gray-500">따뜻한 칭찬의 마음이 쌓여가는 공간 ✨</span>
                 </div>
                 <div id="compliment-gauge-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <!-- 동적으로 채워집니다 -->
+                    <div class="text-center py-12 text-gray-400 col-span-3 bg-white rounded-3xl border border-dashed border-amber-200">구글 시트 연동중... (칭찬모음 탭 데이터를 확인해주세요)</div>
                 </div>
             </div>
         </div>
 
-        <!-- [탭 3] 명예의전당 섹션 -->
+        <!-- [탭 3] 명예의 전당 섹션 -->
         <div id="tab-content-halloffame" class="w-full mb-12 hidden">
             <div class="mb-4">
                 <h3 class="text-2xl font-bold text-amber-900 flex items-center gap-2">
@@ -133,7 +133,18 @@
                 <p class="text-xs text-gray-500 mt-1">역대 주차별로 베스트 프렌드에 선정된 자랑스러운 친구들입니다!</p>
             </div>
             <div id="archive-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- 아카이브 카드 아이템들이 동적으로 로드됩니다 -->
+                <div class="text-center py-12 text-gray-400 col-span-3 bg-white rounded-3xl border border-dashed border-amber-200">구글 시트 연동중... (명예의 전당 탭 데이터를 확인해주세요)</div>
+            </div>
+        </div>
+
+        <!-- [탭 4] 나만의 커서 만들기 (사이트 임베드) 섹션 -->
+        <div id="tab-content-customcursor" class="w-full mb-12 hidden">
+            <div class="bg-white p-2 md:p-4 rounded-3xl border-2 border-amber-100 shadow-sm max-w-5xl mx-auto">
+                <div class="border-2 border-amber-100 rounded-3xl overflow-hidden relative shadow-inner">
+                    <div class="w-full h-[750px] bg-gray-50 relative">
+                        <iframe src="https://cursor-2026.netlify.app/" class="w-full h-full border-0"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -141,7 +152,7 @@
 
     <!-- 학생 마이페이지 모달 -->
     <div id="mypage-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-pink-100 animate-in fade-in zoom-in duration-200">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-pink-100">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
                     <span>👤 학생 마이페이지</span>
@@ -149,7 +160,6 @@
                 <button onclick="handleLogout()" class="text-xs text-gray-500 hover:text-red-500 bg-gray-100 px-3 py-1 rounded-xl">로그아웃</button>
             </div>
             
-            <!-- 사용자 정보 표시 -->
             <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-100 mb-6 flex items-center gap-4">
                 <div id="modal-user-avatar-preview" class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-3xl border-2 border-pink-200 shadow-sm overflow-hidden flex-shrink-0">
                     🐰
@@ -161,7 +171,6 @@
                 </div>
             </div>
 
-            <!-- 프로필 꾸미기 섹션 -->
             <div class="mb-6">
                 <label class="block text-xs font-bold text-gray-700 mb-2">나만의 프로필 이모지 선택하기</label>
                 <div class="grid grid-cols-6 gap-2 bg-amber-50/50 p-3 rounded-2xl border border-amber-100 mb-4">
@@ -183,7 +192,6 @@
                 <input type="file" id="photo-file-input" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer">
             </div>
 
-            <!-- 버튼 영역 -->
             <div class="flex justify-end gap-2">
                 <button onclick="closeMyPageModal()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-sm font-bold transition">
                     확인 및 닫기
@@ -194,7 +202,7 @@
 
     <!-- 관리자 패널 모달 -->
     <div id="admin-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border-4 border-amber-200 animate-in fade-in zoom-in duration-200">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border-4 border-amber-200">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold text-amber-900 flex items-center gap-2">
                     <span>🛠️ 선생님 관리자 패널</span>
@@ -204,9 +212,6 @@
             <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 mb-6">
                 <p class="text-sm font-bold text-amber-900">선생님, 환영합니다! ✨</p>
                 <p class="text-xs text-amber-700/80 mt-1">현재 로그인된 계정이 관리자(Admin) 권한으로 인증되었습니다.</p>
-            </div>
-            <div class="space-y-3 text-xs text-gray-600 mb-6">
-                <p>📋 <strong>데이터 관리 안내:</strong> '이번주', '칭찬모음', '명예의전당' 탭의 데이터는 구글 시트를 통해 실시간 연동됩니다.</p>
             </div>
             <div class="flex justify-end gap-2">
                 <button onclick="closeAdminModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-bold transition">
@@ -301,14 +306,13 @@
         }
 
         async function checkStudentAllowed(email) {
-            if (!db) return true; // 테스트 편의상 비어있으면 통과 후 나중에 명단 검증
+            if (!db) return true;
             try {
                 const studentDocRef = doc(db, 'allowed_students', email.replace(/\./g, '_'));
                 const studentSnap = await getDoc(studentDocRef);
                 if (studentSnap.exists()) {
                     return true;
                 }
-                // 컬렉션 문서가 아직 미등록 상태일 때 학교 계정(@ 표기)인 경우 유연하게 통과시키되 추후 관리 가능
                 return true; 
             } catch (e) {
                 console.log("학생 명단 확인 중 오류:", e);
@@ -446,26 +450,13 @@
     </script>
 
     <script>
-        const SHEET_ID = "1wuejDGAPCSH5X1awMxLenBKS07W4vHCMsBxx3mxTMqU";
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzW6qk493ARfW8z_74RqjjrP89jDolfJ_54G2INIRLlub0_coVS0xJbAHuAnZSbQNnUhA/exec"; 
 
-        const demoData = {
-            week: "2026년 1학기 3주차",
-            currentWinners: [
-                { name: "김도덕", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 정말 고마워! 모둠 친구들을 이끄는 모습이 아주 멋졌어." },
-                { name: "이배려", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요. 친구들의 의견을 끝까지 경청하는 모습이 감동이었습니다!" }
-            ],
-            allCompliments: [
-                { name: "김도덕", emoji: "🐰", count: 3, lastMessage: "항상 밝은 미소로 친구들을 도와주어 정말 고마워! 모둠 친구들을 이끄는 모습이 아주 멋졌어." },
-                { name: "이배려", emoji: "🦊", count: 2, lastMessage: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요. 친구들의 의견을 끝까지 경청하는 모습이 감동이었습니다!" },
-                { name: "박정직", emoji: "🦁", count: 2, lastMessage: "학급 청소를 스스로 도맡아 해주었습니다. 힘든 내색 없이 묵묵히 도와줘서 우리 반이 항상 깨끗해요." },
-                { name: "최성실", emoji: "⭐", count: 1, lastMessage: "지각 없이 바른 생활을 보여줬어요. 언제나 약속 시간을 잘 지키는 모습이 정말 멋진 친구입니다." },
-                { name: "강친절", emoji: "🌸", count: 1, lastMessage: "속상해하는 친구를 다정하게 위로해 주었어요. 따뜻한 말 한마디로 교실 분위기를 환하게 밝혀주네요." }
-            ],
-            archive: [
-                { week: "2주차", name: "박정직", emoji: "🦁", message: "학급 청소를 스스로 도맡아 해주었습니다." },
-                { week: "1주차", name: "최성실", emoji: "⭐", message: "지각 없이 바른 생활을 보여줬어요." }
-            ]
+        const loadingPlaceholderData = {
+            week: "연동중",
+            currentWinners: [],
+            allCompliments: [],
+            archive: []
         };
 
         const currentWeekLabelEl = document.getElementById('current-week-label');
@@ -476,26 +467,26 @@
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
         window.switchTab = function(tabName) {
-            const tabs = ['thisweek', 'compliments', 'halloffame'];
+            const tabs = ['bestfriend', 'compliments', 'halloffame', 'customcursor'];
             tabs.forEach(t => {
                 const contentEl = document.getElementById(`tab-content-${t}`);
                 const btnEl = document.getElementById(`tab-btn-${t}`);
                 if (t === tabName) {
                     contentEl.classList.remove('hidden');
-                    btnEl.className = "px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200";
+                    btnEl.className = "px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-amber-600 text-white shadow-amber-200";
                 } else {
                     contentEl.classList.add('hidden');
-                    btnEl.className = "px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50";
+                    btnEl.className = "px-5 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-sm bg-white text-amber-900 border border-amber-200 hover:bg-amber-50";
                 }
             });
         };
 
-        renderUI(demoData);
+        renderUI(loadingPlaceholderData);
 
         if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
             startPollingData(GAS_WEB_APP_URL);
         } else {
-            lastSyncTimeEl.innerText = "데모 모드 구동 중";
+            lastSyncTimeEl.innerText = "연동중 (GAS URL 입력 대기)";
         }
 
         function startPollingData(url) {
@@ -511,30 +502,30 @@
                 const data = await response.json();
                 if (data) {
                     const normalizedData = {
-                        week: data.week || demoData.week,
-                        currentWinners: (data.currentWinners && data.currentWinners.length > 0) ? data.currentWinners : demoData.currentWinners,
-                        allCompliments: (data.allCompliments && data.allCompliments.length > 0) ? data.allCompliments : demoData.allCompliments,
-                        archive: (data.archive && data.archive.length > 0) ? data.archive : demoData.archive
+                        week: data.week || "연동중",
+                        currentWinners: data.currentWinners || [],
+                        allCompliments: data.allCompliments || [],
+                        archive: data.archive || []
                     };
                     renderUI(normalizedData);
                     const now = new Date();
                     lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 시트 동기화 완료`;
                 }
             } catch (error) {
-                console.warn("구글 시트 연동 중 오류 발생 (기본 데모 데이터 유지):", error);
-                lastSyncTimeEl.innerText = "데모 모드 동작 중";
+                console.warn("구글 시트 연동 중:", error);
+                lastSyncTimeEl.innerText = "연동중 (데이터 대기 중)";
             }
         }
 
         function renderUI(data) {
-            currentWeekLabelEl.innerText = data.week || "이번 주";
+            currentWeekLabelEl.innerText = data.week || "연동중";
 
             const winners = data.currentWinners || [];
-            winnersCountBadge.innerText = `${winners.length}명 선정`;
+            winnersCountBadge.innerText = winners.length > 0 ? `${winners.length}명 선정` : "연동중";
             
             winnersContainer.innerHTML = "";
             if (winners.length === 0) {
-                winnersContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 bg-white rounded-2xl border border-dashed border-amber-200">등록된 이번 주 베스트 프렌드가 없습니다.</div>`;
+                winnersContainer.innerHTML = `<div class="col-span-2 text-center py-12 text-gray-400 bg-white rounded-3xl border border-dashed border-amber-200">구글 시트 연동중... (베스트 프렌드 탭 데이터를 확인해주세요)</div>`;
             } else {
                 winners.forEach((winner) => {
                     const customAvatar = localStorage.getItem(`user_avatar_${winner.name}`) || winner.emoji || '⭐';
@@ -559,7 +550,7 @@
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">${winner.name}</h3>
                             <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
                                 <p class="text-[11px] text-amber-800 font-semibold mb-0.5">💌 친구들이 남긴 한마디</p>
-                                <p class="message-font text-base sm:text-lg text-gray-700 whitespace-pre-line break-words leading-relaxed">"${winner.message}"</p>
+                                <p class="message-font text-base sm:text-lg text-gray-700 whitespace-pre-line break-words leading-relaxed">${winner.message}</p>
                             </div>
                         </div>
                     `;
@@ -570,7 +561,7 @@
             const allCompliments = data.allCompliments || [];
             complimentGaugeContainer.innerHTML = "";
             if (allCompliments.length === 0) {
-                complimentGaugeContainer.innerHTML = `<p class="text-gray-400 text-sm col-span-3 text-center py-4">아직 등록된 칭찬 내역이 없습니다.</p>`;
+                complimentGaugeContainer.innerHTML = `<div class="text-center py-12 text-gray-400 col-span-3 bg-white rounded-3xl border border-dashed border-amber-200">구글 시트 연동중... (칭찬모음 탭 데이터를 확인해주세요)</div>`;
             } else {
                 allCompliments.forEach(item => {
                     const customAvatar = localStorage.getItem(`user_avatar_${item.name}`) || item.emoji || '💖';
@@ -591,9 +582,8 @@
                                     <h4 class="font-bold text-gray-800 text-base truncate">${item.name}</h4>
                                 </div>
                             </div>
-                            <!-- Multi-line text wrapping for long messages -->
-                            <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100/60 mb-4">
-                                <p class="message-font text-xs sm:text-sm text-gray-700 whitespace-pre-line break-words leading-relaxed">"${item.lastMessage || '따뜻한 칭찬을 받았어요'}"</p>
+                            <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100/60 mb-4 max-h-56 overflow-y-auto">
+                                <p class="message-font text-xs sm:text-sm text-gray-700 whitespace-pre-line break-words leading-relaxed">${item.lastMessage || '따뜻한 칭찬을 받았어요'}</p>
                             </div>
                         </div>
                         <div>
@@ -609,7 +599,7 @@
             const archives = data.archive || [];
             archiveListEl.innerHTML = "";
             if (archives.length === 0) {
-                archiveListEl.innerHTML = `<p class="text-gray-400 text-sm">등록된 기록이 없습니다.</p>`;
+                archiveListEl.innerHTML = `<div class="text-center py-12 text-gray-400 col-span-3 bg-white rounded-3xl border border-dashed border-amber-200">구글 시트 연동중... (명예의 전당 탭 데이터를 확인해주세요)</div>`;
             } else {
                 archives.forEach(item => {
                     const customArchAvatar = localStorage.getItem(`user_avatar_${item.name}`) || item.emoji || '🌟';
@@ -624,7 +614,7 @@
                         <div class="overflow-hidden">
                             <p class="text-xs text-amber-700 font-bold">${item.week}</p>
                             <p class="text-base font-bold text-gray-800 truncate">${item.name}</p>
-                            <p class="message-font text-xs text-gray-500 whitespace-pre-line break-words">"${item.message}"</p>
+                            <p class="message-font text-xs text-gray-500 whitespace-pre-line break-words">${item.message}</p>
                         </div>
                     `;
                     archiveListEl.appendChild(archCard);
