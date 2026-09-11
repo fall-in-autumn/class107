@@ -447,19 +447,14 @@
     </script>
 
     <script>
-        // 구글 앱스 스크립트 웹 앱 URL 및 스프레드시트 연동
-        // 제공된 구글 시트 ID: 1wuejDGAPCSH5X1awMxLenBKS07W4vHCMsBxx3mxTMqU
         const SHEET_ID = "1wuejDGAPCSH5X1awMxLenBKS07W4vHCMsBxx3mxTMqU";
-        
-        // 구글 앱스 스크립트(GAS)를 배포한 뒤 해당 웹 앱 URL을 아래에 입력하세요.
-        // 입력하지 않을 경우, 시트 연동 구조에 맞춘 데모 데이터와 시트 안내가 표시됩니다.
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzW6qk493ARfW8z_74RqjjrP89jDolfJ_54G2INIRLlub0_coVS0xJbAHuAnZSbQNnUhA/exec"; 
 
         const demoData = {
-            week: "2026년 1학기 3주차 (구글시트 연동 대기)",
+            week: "2026년 1학기 3주차 (데모/연동 가이드)",
             currentWinners: [
-                { name: "김도덕", emoji: "🐰", message: "구글 시트(1wuejDGAP...)에서 이번 주 베스트 프렌드 데이터를 불러오는 중입니다!" },
-                { name: "이배려", emoji: "🦊", message: "앱스 스크립트를 통해 시트의 데이터를 실시간으로 연동할 수 있습니다." }
+                { name: "김도덕", emoji: "🐰", message: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
+                { name: "이배려", emoji: "🦊", message: "모둠 활동에서 늘 양보하고 리더십을 발휘했어요." }
             ],
             allCompliments: [
                 { name: "김도덕", emoji: "🐰", count: 3, lastMessage: "항상 밝은 미소로 친구들을 도와주어 고마워!" },
@@ -481,7 +476,6 @@
         const archiveListEl = document.getElementById('archive-list');
         const lastSyncTimeEl = document.getElementById('last-sync-time');
 
-        // 탭 전환 함수
         window.switchTab = function(tabName) {
             const tabs = ['thisweek', 'compliments', 'halloffame'];
             tabs.forEach(t => {
@@ -497,11 +491,12 @@
             });
         };
 
+        renderUI(demoData);
+
         if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
             startPollingData(GAS_WEB_APP_URL);
         } else {
-            renderUI(demoData);
-            lastSyncTimeEl.innerText = "데모 모드 구동 중 (구글 시트 연동 대기)";
+            lastSyncTimeEl.innerText = "데모 모드 구동 중";
         }
 
         function startPollingData(url) {
@@ -511,21 +506,24 @@
 
         async function fetchData(url) {
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, { method: 'GET', mode: 'cors' });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
                 const data = await response.json();
                 if (data) {
                     const normalizedData = {
-                        week: data.week || "이번 주",
-                        currentWinners: data.currentWinners || [],
-                        allCompliments: data.allCompliments || [],
-                        archive: data.archive || []
+                        week: data.week || demoData.week,
+                        currentWinners: (data.currentWinners && data.currentWinners.length > 0) ? data.currentWinners : demoData.currentWinners,
+                        allCompliments: (data.allCompliments && data.allCompliments.length > 0) ? data.allCompliments : demoData.allCompliments,
+                        archive: (data.archive && data.archive.length > 0) ? data.archive : demoData.archive
                     };
                     renderUI(normalizedData);
                     const now = new Date();
-                    lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 갱신됨`;
+                    lastSyncTimeEl.innerText = `${now.getHours()}시 ${now.getMinutes()}분 시트 동기화 완료`;
                 }
             } catch (error) {
-                console.log("시트 연동 데이터 로드 중 오류 (데모 데이터 폴백 유지)");
+                console.warn("구글 시트 연동 중 오류 발생 (기본 데이터 유지):", error);
+                lastSyncTimeEl.innerText = "데모 모드 동작 중";
             }
         }
 
@@ -583,15 +581,21 @@
                     const percentage = Math.min(100, (count / maxCount) * 100);
 
                     const gaugeCard = document.createElement('div');
-                    gaugeCard.className = "bg-white p-4 rounded-2xl border border-amber-200/60 shadow-sm flex flex-col justify-between";
+                    // Changed card layout to support vertical flow and full multi-line text wrapping
+                    gaugeCard.className = "bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm flex flex-col justify-between";
                     gaugeCard.innerHTML = `
-                        <div class="flex items-center space-x-3 mb-3">
-                            <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-pink-200">
-                                ${isImage ? `<img src="${customAvatar}" class="w-full h-full object-cover">` : `<span class="text-2xl">${customAvatar}</span>`}
+                        <div>
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-pink-200">
+                                    ${isImage ? `<img src="${customAvatar}" class="w-full h-full object-cover">` : `<span class="text-2xl">${customAvatar}</span>`}
+                                </div>
+                                <div class="overflow-hidden">
+                                    <h4 class="font-bold text-gray-800 text-base truncate">${item.name}</h4>
+                                </div>
                             </div>
-                            <div class="flex-grow overflow-hidden">
-                                <h4 class="font-bold text-gray-800 text-base truncate">${item.name}</h4>
-                                <p class="message-font text-xs text-gray-500 truncate mt-0.5">"${item.lastMessage || '따뜻한 칭찬을 받았어요'}"</p>
+                            <!-- Multi-line text support: removed truncate, added whitespace-pre-line and break-words -->
+                            <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100/60 mb-4">
+                                <p class="message-font text-xs text-gray-700 whitespace-pre-line break-words leading-relaxed">"${item.lastMessage || '따뜻한 칭찬을 받았어요'}"</p>
                             </div>
                         </div>
                         <div>
